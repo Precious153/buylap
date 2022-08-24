@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1095559710075",
+    "project_id": "buylap-c5d8d",
+    "storage_bucket": "buylap-c5d8d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095559710075:android:c44b705df20806d8fea9de",
+        "android_client_info": {
+          "package_name": "com.example.buylap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1095559710075-lb7a4vdoeb0hr6549q7unsc0jts5dcnr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_BlIjxFMxkMRBJ_rkij1J52g2tBZGL4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095559710075-lb7a4vdoeb0hr6549q7unsc0jts5dcnr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
