@@ -49,13 +49,16 @@ class _SignUpState extends State<SignUp> {
     return null;
   }
 
-  senduserName() async {
-    CollectionReference _collectionRef=FirebaseFirestore.instance.collection('users-data');
+  sendName() async {
+    CollectionReference _collectionRef=
+    FirebaseFirestore.instance.collection('user');
     return _collectionRef.doc().set({
-      'firstname':_firstname,
-      'lastname':_lastname,
-    }).then((value) => print('user data addedd')).catchError((error)=>print("something is wrong")) ;
+      'firstname':_firstname.text,
+      'lastname':_lastname.text,
+    }).then((value) => print('user data added')).
+    catchError((error)=>print("something is wrong")) ;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,9 +91,13 @@ class _SignUpState extends State<SignUp> {
                  child: Column(
                    children: [
                      TextFormField(
+                       keyboardType: TextInputType.emailAddress,
                        controller: _email,
                        validator:validateEmail,
                        decoration: InputDecoration(
+                           border: OutlineInputBorder(
+                               borderRadius: BorderRadius.circular(10)
+                           ),
                            prefixIcon: Icon(
                              Icons.email_outlined,
                              color: Color(0xff5956E9),
@@ -122,13 +129,16 @@ class _SignUpState extends State<SignUp> {
                            return 'Firstname field entry is needed';
                        },
                        decoration: InputDecoration(
+                           border: OutlineInputBorder(
+                               borderRadius: BorderRadius.circular(10)
+                           ),
                            prefixIcon: Icon(
                              Icons.account_circle_outlined,
                              color: Color(0xff5956E9),
                            ),
                            filled: true,
                            fillColor:Colors.white ,
-                           contentPadding: EdgeInsets.only(left: 10),
+                           contentPadding:  EdgeInsets.only(left: 10),
                            hintText: "First Name",
                            enabledBorder: OutlineInputBorder(
                                borderSide: BorderSide(color: Color.fromRGBO( 229, 229, 229, 1), width: 2),
@@ -153,6 +163,9 @@ class _SignUpState extends State<SignUp> {
                            return 'Lastname field entry is needed';
                        },
                        decoration: InputDecoration(
+                           border: OutlineInputBorder(
+                               borderRadius: BorderRadius.circular(10)
+                           ),
                            prefixIcon: Icon(
                              Icons.account_circle_outlined,
                              color: Color(0xff5956E9),
@@ -182,6 +195,9 @@ class _SignUpState extends State<SignUp> {
                        validator: validatePassword,
                        obscureText: _obsure,
                        decoration: InputDecoration(
+                           border: OutlineInputBorder(
+                               borderRadius: BorderRadius.circular(10)
+                           ),
                            prefixIcon: Icon(
                              Icons.lock_outline,
                              color: Color(0xff5956E9),
@@ -240,7 +256,8 @@ class _SignUpState extends State<SignUp> {
                              loading = true;
                            });
                          try{
-                           await FirebaseAuth.instance.
+                           await sendName();
+                           FirebaseAuth.instance.
                            createUserWithEmailAndPassword(
                              email: _email.text.trim(),
                              password: _password.text,
@@ -259,7 +276,6 @@ class _SignUpState extends State<SignUp> {
                              loading = false;
                            });
                          }
-                         senduserName();
                        },
                        child: Container(
                          height: 50,
@@ -281,7 +297,7 @@ class _SignUpState extends State<SignUp> {
                    ],
                  ),
                ),
-                // Spacer(),
+
                 SizedBox(height: 30,),
 
                 Row(

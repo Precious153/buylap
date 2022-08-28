@@ -1,3 +1,4 @@
+import 'package:buylap/login.dart';
 import 'package:buylap/signUp.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,7 +29,8 @@ class SplashScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 50,right: 50,bottom: 20),
                 child: GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context)=>Login()));
                   },
                   child: Container(height: 50,
                   width: double.infinity,

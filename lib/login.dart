@@ -73,6 +73,9 @@ class _LoginState extends State<Login> {
                       controller: _email,
                       validator: validateEmail,
                       decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
                           prefixIcon: Icon(
                             Icons.email_outlined,
                             color: Color(0xff5956E9),
@@ -106,6 +109,9 @@ class _LoginState extends State<Login> {
                       },
                       obscureText: _obsure,
                       decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)
+                          ),
                           prefixIcon: Icon(
                             Icons.lock_outline,
                             color: Color(0xff5956E9),
