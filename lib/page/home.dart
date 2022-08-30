@@ -1,9 +1,12 @@
 
-import 'package:buylap/screens/view.dart';
+import 'dart:io';
+
+import 'package:buylap/home_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../screens/apple.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,6 +16,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  
+  final user = FirebaseAuth.instance.currentUser;
+  final CollectionReference _reference =  FirebaseFirestore.instance.collection('users-data');
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,64 +39,146 @@ class _HomeState extends State<Home> {
                         fontWeight: FontWeight.w700
                     )),
                 SizedBox(height: 20,),
-                GestureDetector(
-                  // onTap: (){
-                  //   Navigator.push(context,
-                  //   MaterialPageRoute(builder: (context)=>View()));
-                  // },
-                  child: Container(
-                    height: 130,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20.0,top: 10),
-                          child: Container(
-                              height:100,
-                              width: 100,
-                              child: Image.asset('images/hp2.jpg',fit: BoxFit.cover,)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 20,),
-                              Text('HP Probook X360 11 Intel Pentium \nTouchscreen'
-                                  '265GB SSD - 4GB\nRAM + 32GB Flash Mouse',
-                                  style: GoogleFonts.raleway(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600
-                                  )),
-                              SizedBox(height: 20,),
-                              Row(
-                                children: [
-                                  Text('₦',
-                                      style: GoogleFonts.raleway(
-                                          color: Color(0xff5956E9),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700
-                                      )),
-                                  Text('180,000',
-                                      style: GoogleFonts.raleway(
-                                          color: Color(0xff5956E9),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700
-                                      )),
-                                ],
-                              ),
-                            ],
+                StreamBuilder(
+                  stream: _reference.snapshots().asBroadcastStream(),
+                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
+                    if(snapshot.hasError){
+                      return Center(child: Text('error'));
+                    }else{
+                      if(!snapshot.hasData){
+                        Center(child:
+                        CircularProgressIndicator(color: Colors.red,));
+                      }else{
+                        final datavalue =
+                            snapshot.data!.docs.toList();
+                        print(datavalue.length);
+                        print(datavalue[0].data());
+                        return Container(
+                          height: 800,
+                          child: ListView.builder(
+                            itemCount: datavalue.length,
+                              itemBuilder: (context,index){
+                              return  SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: Column(
+                                  children: [
+                                    GestureDetector(
+                                      // onTap: (){
+                                      //   Navigator.push(context,
+                                      //   MaterialPageRoute(builder: (context)=>View()));
+                                      // },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(bottom: 20.0),
+                                        child: Container(
+                                          height: 130,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(20),
+                                              color: Colors.white
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 20.0,top: 10),
+                                                child: Container(
+                                                    height:100,
+                                                    width: 100,
+                                                    child:
+                                                    Image.file(File('${datavalue[index]['imagepath'].toString()}'))
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 10.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(height: 20,),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                            '${datavalue[index]['name']}',
+                                                            style: GoogleFonts.raleway(
+                                                                color: Colors.black,
+                                                                fontSize: 15,
+                                                                fontWeight: FontWeight.w600
+                                                            )),
+                                                        PopupMenuButton(
+                                                          itemBuilder: (BuildContext context) =>
+                                                          <PopupMenuEntry>[
+                                                            const PopupMenuItem(
+                                                              child: Text('Edit'),
+                                                            ),
+                                                            const PopupMenuItem(
+                                                              child: Text('Delete'),
+                                                            ),
+                                                          ],
+                                                        ),
+
+                                                      ],
+                                                    ),
+
+                                                    Text(
+                                                            '${datavalue[index]['description']}',
+                                                        style: GoogleFonts.raleway(
+                                                            color: Colors.black,
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w600
+                                                        )),
+                                                    // Row(
+                                                    //   crossAxisAlignment: CrossAxisAlignment.end,
+                                                    //   mainAxisAlignment: MainAxisAlignment.end,
+                                                    //   children: [
+                                                    //     PopupMenuButton(
+                                                    //       itemBuilder: (BuildContext context) =>
+                                                    //       <PopupMenuEntry>[
+                                                    //         const PopupMenuItem(
+                                                    //           child: Text('Edit'),
+                                                    //         ),
+                                                    //         const PopupMenuItem(
+                                                    //           child: Text('Delete'),
+                                                    //         ),
+                                                    //       ],
+                                                    //     ),
+                                                    //   ],
+                                                    // ),
+                                                    SizedBox(height: 20,),
+
+                                                    Row(
+                                                      children: [
+                                                        Text('₦',
+                                                            style: GoogleFonts.raleway(
+                                                                color: Color(0xff5956E9),
+                                                                fontSize: 16,
+                                                                fontWeight: FontWeight.w700
+                                                            )),
+                                                        Text('${datavalue[index]['price']}',
+                                                            style: GoogleFonts.raleway(
+                                                                color: Color(0xff5956E9),
+                                                                fontSize: 16,
+                                                                fontWeight: FontWeight.w700
+                                                            )),
+
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              }
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
+                        );
+                      }
+                      return SizedBox();
+                    }
+                  },
                 ),
               ],
             ),

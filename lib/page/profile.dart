@@ -51,14 +51,14 @@ class _ProfileState extends State<Profile> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text('Precious',
+                                    Text('Hi',
                                         style: GoogleFonts.raleway(
                                             color: Colors.black,
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700
                                         )),
                                     SizedBox(width: 10,),
-                                    Text('Adeleye',
+                                    Text('There',
                                         style: GoogleFonts.raleway(
                                             color: Colors.black,
                                             fontSize: 16,
@@ -74,10 +74,10 @@ class _ProfileState extends State<Profile> {
                   ),
                   SizedBox(height: 20,),
                   GestureDetector(
-                    onTap: (){
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context)=>EditProfile()));
-                    },
+                    // onTap: (){
+                    //   Navigator.push(context,
+                    //       // MaterialPageRoute(builder: (context)=>EditProfile()));
+                    // },
                     child: Container(
                       height: 60,
                       width: double.infinity,
