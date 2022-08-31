@@ -269,7 +269,7 @@ class _SignUpState extends State<SignUp> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            HomePage())));
+                                            Login())));
                             errorMessage = '';
                           } on FirebaseAuthException catch (error) {
                             errorMessage = error.message!;
