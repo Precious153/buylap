@@ -18,10 +18,16 @@ class StoragePath {
       return;
     }
     try {
-      final ref = FirebaseStorage.instance.ref().child('user images').
-    child(DateTime.now().toString());
-      await ref.putFile(file);
-    filePath=await ref.getDownloadURL();
+    //   final ref = FirebaseStorage.instance.ref().child('user images').
+    // child(DateTime.now().toString());
+    //   await ref.putFile(file);
+    // filePath=await ref.getDownloadURL();
+      var reference = FirebaseStorage.instance.ref().child('last_image/car5'); // Modify this path/string as your need
+      UploadTask  uploadTask = reference.putFile(file);
+      TaskSnapshot  taskSnapshot = await uploadTask;
+      var imageUrl = await taskSnapshot.ref.getDownloadURL();
+      print(imageUrl);
+
     FirebaseFirestore.instance.collection('wallpaper').doc(DateTime.now().toString()).set({
       'id':_auth.currentUser!.uid,
       'email':_auth.currentUser!.email,

@@ -238,45 +238,51 @@ class _SignUpState extends State<SignUp> {
                                fontWeight: FontWeight.w400
                            )),
                      ),
+
+                     SizedBox(height: 40,),
                      Center(
-                       child: Text(errorMessage,style: TextStyle(
-                         color: Colors.red
+                       child: Text(
+                         errorMessage,style: TextStyle(
+                           color: Colors.red
                        ),),
                      ),
-                     SizedBox(height: 40,),
-
                     loading
                         ?CircularProgressIndicator(
                       valueColor: new AlwaysStoppedAnimation<Color>(Color(0xff5956E9)),
                     )
                         : GestureDetector(
-                       onTap: () async {
-                         if(_formKey.currentState!.validate()) {
-                           setState(() {
-                             loading = true;
-                           });
-                         try{
-                           await sendName();
-                           FirebaseAuth.instance.
-                           createUserWithEmailAndPassword(
-                             email: _email.text.trim(),
-                             password: _password.text,
-                           ).then((value) =>
-                               Navigator.pushReplacement(context,
-                                   MaterialPageRoute(
-                                       builder: (context) => HomePage())));
-                           errorMessage = '';
-                         }on FirebaseAuthException catch (error) {
-                           errorMessage = error.message!;
-                         }catch(e,s){
-                           print(e);
-                           print(s);
-                         }
-                           setState(() {
-                             loading = false;
-                           });
-                         }
-                       },
+                      onTap: () async {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            loading = true;
+                          });
+                          try {
+                            await
+                            sendName();
+                            FirebaseAuth.instance
+                                .createUserWithEmailAndPassword(
+                              email: _email.text.trim(),
+                              password: _password.text,
+                            )
+                                .then((value) =>
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            HomePage())));
+                            errorMessage = '';
+                          } on FirebaseAuthException catch (error) {
+                            errorMessage = error.message!;
+                            print(error);
+                          } catch (e, s) {
+                            print(e);
+                            print(s);
+                          }
+                          setState(() {
+                            loading = false;
+                          });
+                        }
+                      },
                        child: Container(
                          height: 50,
                          width: double.infinity,

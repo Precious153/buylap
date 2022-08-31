@@ -8,6 +8,7 @@ import 'package:buylap/page/profile.dart';
 import 'package:buylap/screens/storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,19 +37,34 @@ class _HomePageState extends State<HomePage> {
 
   TextEditingController _price = TextEditingController();
 
+  final user = FirebaseAuth.instance.currentUser;
+
+
   final _key = GlobalKey<FormState>();
   bool notLoading = true;
   var imagePath;
-  CollectionReference _collectionRef=
+  CollectionReference _collectionRef =
   FirebaseFirestore.instance.collection
     ('users-data');
   sendUserName() async {
-    return _collectionRef.doc().set({
+    return _collectionRef.add({
       'name':_name.text,
       'description':_desc.text,
       'price':_price.text,
       'imagepath':imagePath,
     }).then((value) => Navigator.pop(context)).catchError((error)=>print("something is wrong")) ;
+  }
+  updateUserName() async {
+    return _collectionRef.doc().update({
+      'name':_name.text,
+      'description':_desc.text,
+      'price':_price.text,
+      'imagepath':imagePath,
+    }).then((value) => Navigator.pop(context)).catchError((error)=>print("something is wrong")) ;
+  }
+  deleteUserName() async {
+    return _collectionRef.doc().delete(
+    ).then((value) => Navigator.pop(context)).catchError((error)=>print("something is wrong")) ;
   }
   int curretTab =0;
   final List<Widget> screens = [
@@ -213,10 +229,6 @@ class _HomePageState extends State<HomePage> {
                                       allowedExtensions: ['png','jpg'],
                                     );
                                     if(results ==null){
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('No file selected'),
-                                        ),
-                                      );
                                       return null;
                                     }
                                     final path = results.files.single.path!;
@@ -224,8 +236,15 @@ class _HomePageState extends State<HomePage> {
                                     imagePath=path;
                                     setState(() {
                                     });
+                                    storage.uploadFile(path, fileName);
                                     print(path);
                                     print(fileName);
+                                    if(path.isNotEmpty){
+                                      Fluttertoast.showToast(msg: "Image uploaded successfully");
+                                    }
+                                    if(path.isEmpty){
+                                      Fluttertoast.showToast(msg: "select image");
+                                    }
                                   },
                                   child: Container(
                                     height: 50,
@@ -249,9 +268,15 @@ class _HomePageState extends State<HomePage> {
                                 onTap: (){
                                   if (_key.currentState!.validate()){
                                     sendUserName();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Sending Data')),
+                                    );
+                                    // updateUserName();
+                                    // deleteUserName();
                                     _desc.clear();
                                     _name.clear();
                                     _price.clear();
+
                                   }
                                 },
                                 child: Container(
